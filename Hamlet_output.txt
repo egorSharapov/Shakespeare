@@ -9,9 +9,9 @@
     Excitements of my reason and my blood,
     Exeunt
     Exeunt
+    Exeunt
+    Exeunt
     Exeunt Attendants
-    Exeunt
-    Exeunt
     Exeunt VOLTIMAND and CORNELIUS
     Exeunt VOLTIMAND and CORNELIUS
     Exeunt all but HAMLET
@@ -19,6 +19,28 @@
     Exeunt all but HAMLET
     Exeunt all but HAMLET and HORATIO
     Exeunt all except HAMLET
+
+    Exeunt all but HAMLET and HORATIO
+    Exeunt VOLTIMAND and CORNELIUS
+    Exeunt VOLTIMAND and CORNELIUS
+    Exeunt all except HAMLET
+    Exeunt all but HAMLET
+    Exeunt all but HAMLET
+    Exeunt all but HAMLET
+    Excitements of my reason and my blood,
+    Even while men's minds are wild; lest more mischance
+    Even those you were wont to take delight in, the
+    Even with the very comment of thy soul
+    Excellent well; you are a fishmonger.
+    Exceedingly, my lord; it is very sultry,--as
+    Even to the teeth and forehead of our faults,
+    Exeunt Attendants
+    Excellent, i' faith; of the chameleon's dish: I eat
+    Exchange forgiveness with me, noble Hamlet:
+    Exeunt
+    Exeunt
+    Exeunt
+    Exeunt
 
     Even those you were wont to take delight in, the
     Even to the teeth and forehead of our faults,
@@ -31,9 +53,9 @@
     Excitements of my reason and my blood,
     Exeunt
     Exeunt
-    Exeunt
-    Exeunt
     Exeunt Attendants
+    Exeunt
+    Exeunt
     Exeunt VOLTIMAND and CORNELIUS
     Exeunt VOLTIMAND and CORNELIUS
     Exeunt all but HAMLET
@@ -41,26 +63,4 @@
     Exeunt all but HAMLET
     Exeunt all but HAMLET and HORATIO
     Exeunt all except HAMLET
-
-    Excitements of my reason and my blood,
-    Even to the teeth and forehead of our faults,
-    Excellent well; you are a fishmonger.
-    Exchange forgiveness with me, noble Hamlet:
-    Exeunt all but HAMLET and HORATIO
-    Exeunt VOLTIMAND and CORNELIUS
-    Exeunt VOLTIMAND and CORNELIUS
-    Exeunt all except HAMLET
-    Exeunt all but HAMLET
-    Exeunt all but HAMLET
-    Exeunt all but HAMLET
-    Even while men's minds are wild; lest more mischance
-    Even those you were wont to take delight in, the
-    Even with the very comment of thy soul
-    Exeunt Attendants
-    Exceedingly, my lord; it is very sultry,--as
-    Excellent, i' faith; of the chameleon's dish: I eat
-    Exeunt
-    Exeunt
-    Exeunt
-    Exeunt
 
