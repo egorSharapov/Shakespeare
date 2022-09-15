@@ -77,18 +77,26 @@ void sort (char ** string_number, int count_of_strings)
     assert (string_number != NULL);
     assert (count_of_strings != 0);
 
-    for (int i = 0; i < count_of_strings - 1; i++)
+    for (int i = 0; i < count_of_strings; i++)
     {
-        for (int j = (count_of_strings - 1); j > i; j--)
+        for (int j = 0; j < (count_of_strings - 1); j++)
         {
-            if (string_comparsion (string_number[j-1], string_number[j]))
+            if (string_comparsion (string_number[j], string_number[j + 1]))
             {
-                char* temp = string_number[j - 1];
-                string_number[j - 1] = string_number[j];
-                string_number[j] = temp;
+                swap(string_number, j);
+                
             }
         }
     }
+}
+
+
+void swap(char **string_number, int j) 
+{
+    char* temp = string_number[j];
+                
+    string_number[j] = string_number[j + 1];
+    string_number[j + 1] = temp;
 }
 
 
@@ -100,21 +108,22 @@ bool string_comparsion (char * string1, char * string2)
     char * temp_string1 = string1;
     char * temp_string2 = string2;
 
-    while (*temp_string1 != '\n' or *temp_string2 != '\n')
+    while (*temp_string1 != '\n' and *temp_string2 != '\n')
     {
-        if (not_letter (*temp_string1))
+        while (not_letter (*temp_string1) and *temp_string2 != '\n') 
             temp_string1++;
-        if (not_letter (*temp_string2)) 
+        while (not_letter (*temp_string2) and *temp_string2 != '\n')
             temp_string2++;
-
+        
         if (*temp_string1 > *temp_string2)
             return true;
         else if (*temp_string1++ == *temp_string2++);
+
         else
             return false;
     }
 
-    if (*temp_string1 == '\n')
+    if (*temp_string2 == '\n')
         return true;
     
     return false;
@@ -129,16 +138,16 @@ void reverse_sort (char ** string_number, int count_of_strings, char * my_text)
 
     reverse_strings (string_number, count_of_strings);
     
-    for (int i = 0; i < count_of_strings - 1; i++)
+    for (int i = 0; i < count_of_strings; i++)
     {
-        for (int j = (count_of_strings - 1); j > i; j--)
+        for (int j = 0; j < (count_of_strings - 1); j++)
         {
-            if (reverse_string_comparsion (string_number[j-1], string_number[j]))
+            if (reverse_string_comparsion (string_number[j], string_number[j + 1]))
             {
-                char* temp = string_number[j - 1];
+                char* temp = string_number[j];
                 
-                string_number[j - 1] = string_number[j];
-                string_number[j] = temp;
+                string_number[j] = string_number[j + 1];
+                string_number[j + 1] = temp;
             }
         }
     }
@@ -154,20 +163,21 @@ bool reverse_string_comparsion (char * string1, char * string2)
     char * temp_string1 = string1;
     char * temp_string2 = string2;
     
-    while (*temp_string1 != '\n' or *temp_string2 != '\n')
+    while (*temp_string1 != '\n' and *temp_string2 != '\n')
     {
-        if (not_letter (*temp_string1)) 
+        while (not_letter (*temp_string1) and *temp_string2 != '\n') 
             temp_string1--;
-        if (not_letter (*temp_string2))
+        while (not_letter (*temp_string2) and *temp_string2 != '\n')
             temp_string2--;
         
+
         if (*temp_string1 > *temp_string2)
             return true;
         else if (*temp_string1-- == *temp_string2--);
         else
             return false;
     }
-    if (*temp_string1 == '\n')
+    if (*temp_string2 == '\n')
         return true;
     
     return false;
@@ -186,7 +196,6 @@ void reverse_strings (char ** string_number, int count_of_strings)
             string_number[i]++;
 
         string_number[i]--;
-        printf ("%c\n", *string_number[i]);
     }
 }
 
@@ -214,4 +223,81 @@ bool not_letter (char symbol)
         return false;
     else
         return true;
+}
+
+
+bool check_param (int argc, char *first_arg, char *second_arg)
+{
+
+    if (argc == 1)
+    {
+        printf ("example: \\.prog input_file.txt output_file.txt\n");
+        return FALL;
+    }
+    else if ((argc != 3))
+    {
+        printf ("incorrect number of parametrs \n\n" \
+                "example: \\.prog input_file.txt output_file.txt\n\n");
+        return FALL;
+    }
+    // else if (*first_arg == *second_arg)
+    // {
+    //     printf ("names of input and output files are similar");
+    //     return FALL;
+    // }
+    else if (check_extension(first_arg, "txt") ==  ERROR or check_extension(second_arg, "txt") ==  ERROR)
+    {
+        printf ("files should have the .txt extension");
+        return FALL;
+    }
+    return SUCCESS;
+}
+
+
+int check_extension (char *file_name, const char *extension)
+{
+    char *last_word = strchr(file_name, '.') + 1;
+
+    if (strcmp (last_word, extension) == 0)
+        return SUCCESS;
+    else
+        return ERROR;
+}
+
+
+int partition(char *string_number[], int low, int high)
+{
+    char * pivot = string_number[high];
+    int i = (low - 1);
+
+    for (int j = low; j < high; j++) 
+    {
+        if (!string_comparsion (string_number[j], pivot)) 
+        {
+            i++;
+        
+            char* temp = string_number[j];
+                        
+            string_number[j] = string_number[i];
+            string_number[i] = temp;
+        }
+    }
+
+    char* temp = string_number[i + 1];
+                        
+    string_number[i + 1] = string_number[high];
+    string_number[high] = temp;  
+
+    return (i + 1);
+}
+
+void quick_sort(char *string_number[], int low, int high) 
+{
+    if (low < high) 
+    {
+        int pi = partition(string_number, low, high);
+
+        quick_sort(string_number, low, pi - 1);
+        quick_sort(string_number, pi + 1, high);
+    }
 }

@@ -3,19 +3,18 @@
 const char *input_name = "Hamlet_input.txt";
 const char *output_name = "Hamlet_output.txt";
 
-int main ()
+int main (int argc, char *argv[])
 {
     FILE *input_file;
     FILE *output_file;
     
-    if (!(input_file = fopen (input_name, "r")) or !(output_file = fopen (output_name, "w")))
-    {
-        printf ("FALL");
-        return 1;
-    }
+    if (!check_param (argc, argv[1], argv[2])) 
+        return INPUT_ERROR;
+
+    if (!(input_file = fopen (argv[1], "r")) or !(output_file = fopen (argv[2], "w")))
+        return FALL;
 
     char * my_text = NULL;
-    char * temp_my_text = NULL;
     int count_of_symbols = 0;
     int count_of_strings = 0;
 
@@ -32,10 +31,12 @@ int main ()
     for (int i = 0; i < count_of_strings; i++)
         temp_string_number[i] = string_number[i];
     
-    sort (string_number, count_of_strings);
+    //sort (string_number, count_of_strings);   
+    quick_sort (string_number, 0, count_of_strings - 1);
     write_to_file (string_number, count_of_strings, output_file);
-
+    
     reverse_sort (string_number, count_of_strings, my_text);
+    //reverse_quick_sort (string_number, count_of_strings, my_text);
     write_to_file (string_number, count_of_strings, output_file);
 
     write_to_file (temp_string_number, count_of_strings, output_file);
