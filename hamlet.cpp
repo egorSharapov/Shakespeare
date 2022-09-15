@@ -5,8 +5,8 @@ const char *output_name = "Hamlet_output.txt";
 
 int main (int argc, char *argv[])
 {
-    FILE *input_file;
-    FILE *output_file;
+    FILE *input_file = NULL;
+    FILE *output_file = NULL;
     
     if (!check_param (argc, argv[1], argv[2])) 
         return INPUT_ERROR;
