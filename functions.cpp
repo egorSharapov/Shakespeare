@@ -1,52 +1,62 @@
 #include "functions.hpp"
+#include "log.h"
 
-
-void read_from_file (FILE * input_file, char ** string_number, const int count_of_symbols, char * my_text)
+void read_from_file (FILE * input_file, char ** string_number, Text * text)
 {
     assert (input_file != NULL);
     assert (string_number != NULL);
-    assert (my_text != NULL);
+    assert (text != NULL);
+    assert (text->count_of_symbols != 0);
 
-    char symbol = '\n';
     int index_of_string = 1;
 
-    string_number[0] = my_text;
+    text->count_of_symbols = fread(text->my_text, sizeof(char), text->count_of_symbols, input_file);
     
-    for (int index_of_symbol = 0; index_of_symbol < count_of_symbols; index_of_symbol++)
-    {   
-        symbol = (char) fgetc (input_file);
-        my_text[index_of_symbol] = symbol;
+    string_number[0] = text->my_text;
 
-        if (symbol == '\n')
+    for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
+    {   
+        if (text->my_text[index_of_symbol] == '\n')
         {
-            string_number[index_of_string] = my_text + index_of_symbol + 1;
+            string_number[index_of_string] = text->my_text + index_of_symbol + 1;
             index_of_string++;
         }  
     }
-    my_text[count_of_symbols] = '\n';
-
-
+    text->my_text[text->count_of_symbols] = '\n';
+    fclose(input_file);
 }
 
 
-void count_symbols (FILE * input_file, int * count_of_symbols, int * count_of_strings)
+void count_symbols (FILE * input_file, Text * text)
 {
     assert (input_file != NULL);
-    assert (count_of_strings != 0);
-    assert (count_of_symbols != 0);
-    
+    assert (text != NULL);
+
+    fseek(input_file, 0, SEEK_END);
+    text->count_of_symbols = ftell(input_file)/sizeof(char);   
+    printf("%d", text->count_of_symbols);                                     
+
+    fseek (input_file, 0, SEEK_SET);
+
+    text->count_of_symbols = 0;
+
     char symbol = '\n';
-    (*count_of_strings)++;
+    text->count_of_strings++;
+    text->count_of_symbols++;
 
     while (true)
     {
         symbol = (char) fgetc(input_file);
-        if (symbol == EOF) break;
-        if (symbol == '\n') (*count_of_strings)++;
-        (*count_of_symbols)++;
+        if (symbol == EOF) 
+            break;
+        if (symbol == '\n') 
+            text->count_of_strings++;
+        text->count_of_symbols++;
     }
     
     fseek (input_file, 0, SEEK_SET);
+    
+    text->my_text = (char *) calloc ((text->count_of_symbols), sizeof (char));
 }
 
 
@@ -74,7 +84,7 @@ void write_to_file (char ** string_number, int count_of_strings, FILE * output_f
 
 void sort (char ** string_number, int count_of_strings)
 {
-    assert (string_number != NULL);
+    assert (string_number    != NULL);
     assert (count_of_strings != 0);
 
     for (int i = 0; i < count_of_strings; i++)
@@ -84,7 +94,6 @@ void sort (char ** string_number, int count_of_strings)
             if (string_comparsion (string_number[j], string_number[j + 1]))
             {
                 swap(string_number, j);
-                
             }
         }
     }
@@ -100,7 +109,7 @@ void swap(char **string_number, int j)
 }
 
 
-bool string_comparsion (char * string1, char * string2)
+int string_comparsion (char * string1, char * string2)
 {
     assert (string1 != NULL);
     assert (string2 != NULL);
@@ -116,11 +125,11 @@ bool string_comparsion (char * string1, char * string2)
             temp_string2++;
         
         if (*temp_string1 > *temp_string2)
-            return true;
+            return 1;
         else if (*temp_string1++ == *temp_string2++);
 
         else
-            return false;
+            return 0;
     }
 
     if (*temp_string2 == '\n')
@@ -130,28 +139,25 @@ bool string_comparsion (char * string1, char * string2)
 }
 
 
-void reverse_sort (char ** string_number, int count_of_strings, char * my_text)
+void reverse_sort (char ** string_number, Text * text)
 {
     assert (string_number != NULL);
-    assert (count_of_strings != 0);
-    assert (my_text != NULL);
+    assert (text != NULL);
+    assert (text->count_of_strings != 0);
 
-    reverse_strings (string_number, count_of_strings);
+    reverse_strings (string_number, text->count_of_strings);
     
-    for (int i = 0; i < count_of_strings; i++)
+    for (int i = 0; i < text->count_of_strings; i++)
     {
-        for (int j = 0; j < (count_of_strings - 1); j++)
+        for (int j = 0; j < (text->count_of_strings - 1); j++)
         {
             if (reverse_string_comparsion (string_number[j], string_number[j + 1]))
             {
-                char* temp = string_number[j];
-                
-                string_number[j] = string_number[j + 1];
-                string_number[j + 1] = temp;
+                swap (string_number, j);
             }
         }
     }
-    reverse_indexes (string_number, count_of_strings, my_text);
+    reverse_indexes (string_number, text);
 }
 
 
@@ -200,15 +206,15 @@ void reverse_strings (char ** string_number, int count_of_strings)
 }
 
 
-void reverse_indexes (char ** string_number, int count_of_strings, char * my_text)
+void reverse_indexes (char ** string_number, Text * text)
 {
     assert (string_number != NULL);
-    assert (count_of_strings != 0);
-    assert (my_text != NULL);
+    assert (text->count_of_strings != 0);
+    assert (text != NULL);
 
-    for (int i = 0; i < count_of_strings; i++)
+    for (int i = 0; i < text->count_of_strings; i++)
     {
-        while (*string_number[i] != '\n' and string_number[i] != my_text - 1)
+        while (*string_number[i] != '\n' and string_number[i] != text->my_text - 1)
         {
             string_number[i]--;
         }
@@ -240,11 +246,12 @@ bool check_param (int argc, char *first_arg, char *second_arg)
                 "example: \\.prog input_file.txt output_file.txt\n\n");
         return FALL;
     }
-    // else if (*first_arg == *second_arg)
-    // {
-    //     printf ("names of input and output files are similar");
-    //     return FALL;
-    // }
+    else if (strcmp(first_arg, second_arg) == 0)
+    {
+        printf ("names of input and output files are similar");
+        
+        return FALL;
+    }
     else if (check_extension(first_arg, "txt") ==  ERROR or check_extension(second_arg, "txt") ==  ERROR)
     {
         printf ("files should have the .txt extension");
@@ -258,10 +265,22 @@ int check_extension (char *file_name, const char *extension)
 {
     char *last_word = strchr(file_name, '.') + 1;
 
-    if (strcmp (last_word, extension) == 0)
+    if ((*last_word == 1) or (strcmp (last_word, extension) == 0))
         return SUCCESS;
     else
         return ERROR;
+}
+
+
+void quick_sort(char *string_number[], int low, int high) 
+{
+    if (low < high) 
+    {
+        int pi = partition(string_number, low, high);
+
+        quick_sort(string_number, low, pi - 1);
+        quick_sort(string_number, pi + 1, high);
+    }
 }
 
 
@@ -291,13 +310,42 @@ int partition(char *string_number[], int low, int high)
     return (i + 1);
 }
 
-void quick_sort(char *string_number[], int low, int high) 
+
+
+void reverse_quick_sort(char *string_number[], int low, int high) 
 {
     if (low < high) 
     {
-        int pi = partition(string_number, low, high);
+        int pi = reverse_partition(string_number, low, high);
 
         quick_sort(string_number, low, pi - 1);
         quick_sort(string_number, pi + 1, high);
     }
+}
+
+
+int reverse_partition(char *string_number[], int low, int high)
+{
+    char * pivot = string_number[high];
+    int i = (low - 1);
+
+    for (int j = low; j < high; j++) 
+    {
+        if (!reverse_string_comparsion (string_number[j], pivot)) 
+        {
+            i++;
+        
+            char* temp = string_number[j];
+                        
+            string_number[j] = string_number[i];
+            string_number[i] = temp;
+        }
+    }
+
+    char* temp = string_number[i + 1];
+                        
+    string_number[i + 1] = string_number[high];
+    string_number[high] = temp;  
+
+    return (i + 1);
 }
