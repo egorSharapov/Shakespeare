@@ -18,24 +18,28 @@ int main (int argc, char *argv[])
         return FALL;
 
 
-    count_symbols (input_file, &text);
-
+    count_and_read (input_file, &text);
+    
     char *string_number[text.count_of_strings];
-    char *temp_string_number[text.count_of_strings] ;
+    char *temp_string_number[text.count_of_strings];
 
-    read_from_file (input_file, string_number, &text);
+    place_pointers (string_number, &text);
 
     for (int i = 0; i < text.count_of_strings; i++)
         temp_string_number[i] = string_number[i];
     
-    //sort (string_number, text.count_of_strings);
+    sheker_sort (string_number, text.count_of_strings, string_comparsion);
+
     //qsort (string_number, text.count_of_strings, sizeof (char *), string_comparsion);
-    quick_sort (string_number, 0, text.count_of_strings - 1);
+    
+    quick_sort (string_number, 0, text.count_of_strings - 1, string_comparsion);
     write_to_file (string_number, text.count_of_strings, output_file);
     
-    // reverse_sort (string_number, &text);
+    //reverse_sort (string_number, &text);
+    //sheker_sort (string_number, text.count_of_strings, reverse_string_comparsion);
+    
     reverse_strings (string_number, text.count_of_strings);
-    reverse_quick_sort (string_number, 0, text.count_of_strings - 1);
+    quick_sort (string_number, 0, text.count_of_strings - 1, reverse_string_comparsion);
     reverse_indexes (string_number, &text);
     
     write_to_file (string_number, text.count_of_strings, output_file);

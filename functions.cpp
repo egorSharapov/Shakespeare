@@ -1,17 +1,14 @@
 #include "functions.hpp"
 #include "log.h"
 
-void read_from_file (FILE * input_file, char ** string_number, Text * text)
+void place_pointers (char ** string_number, Text * text)
 {
-    assert (input_file != NULL);
     assert (string_number != NULL);
     assert (text != NULL);
     assert (text->count_of_symbols != 0);
 
     int index_of_string = 1;
 
-    text->count_of_symbols = fread(text->my_text, sizeof(char), text->count_of_symbols, input_file);
-    
     string_number[0] = text->my_text;
 
     for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
@@ -22,41 +19,33 @@ void read_from_file (FILE * input_file, char ** string_number, Text * text)
             index_of_string++;
         }  
     }
+
     text->my_text[text->count_of_symbols] = '\n';
-    fclose(input_file);
 }
 
 
-void count_symbols (FILE * input_file, Text * text)
+void count_and_read (FILE * input_file, Text * text)
 {
     assert (input_file != NULL);
     assert (text != NULL);
 
     fseek(input_file, 0, SEEK_END);
-    text->count_of_symbols = ftell(input_file)/sizeof(char);   
-    printf("%d", text->count_of_symbols);                                     
+    text->count_of_symbols = ftell(input_file)/sizeof(char);                                 
 
     fseek (input_file, 0, SEEK_SET);
 
-    text->count_of_symbols = 0;
-
-    char symbol = '\n';
-    text->count_of_strings++;
-    text->count_of_symbols++;
-
-    while (true)
-    {
-        symbol = (char) fgetc(input_file);
-        if (symbol == EOF) 
-            break;
-        if (symbol == '\n') 
-            text->count_of_strings++;
-        text->count_of_symbols++;
-    }
-    
-    fseek (input_file, 0, SEEK_SET);
-    
     text->my_text = (char *) calloc ((text->count_of_symbols), sizeof (char));
+        
+    text->count_of_symbols = fread(text->my_text, sizeof(char), text->count_of_symbols, input_file);
+    
+    for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
+    {   
+        if (text->my_text[index_of_symbol] == '\n')
+            text->count_of_strings++; 
+    }
+    text->count_of_strings++;
+    
+    fclose (input_file);
 }
 
 
@@ -161,7 +150,7 @@ void reverse_sort (char ** string_number, Text * text)
 }
 
 
-bool reverse_string_comparsion (char * string1, char * string2)
+int reverse_string_comparsion (char * string1, char * string2)
 {
     assert (string1 != NULL);
     assert (string2 != NULL);
@@ -178,10 +167,10 @@ bool reverse_string_comparsion (char * string1, char * string2)
         
 
         if (*temp_string1 > *temp_string2)
-            return true;
+            return 1;
         else if (*temp_string1-- == *temp_string2--);
         else
-            return false;
+            return 0;
     }
     if (*temp_string2 == '\n')
         return true;
@@ -272,19 +261,19 @@ int check_extension (char *file_name, const char *extension)
 }
 
 
-void quick_sort(char *string_number[], int low, int high) 
+void quick_sort(char *string_number[], int low, int high, int (* string_comparsion) (char *, char *)) 
 {
     if (low < high) 
     {
-        int pi = partition(string_number, low, high);
+        int pi = partition(string_number, low, high, string_comparsion);
 
-        quick_sort(string_number, low, pi - 1);
-        quick_sort(string_number, pi + 1, high);
+        quick_sort(string_number, low, pi - 1, string_comparsion);
+        quick_sort(string_number, pi + 1, high, string_comparsion);
     }
 }
 
 
-int partition(char *string_number[], int low, int high)
+int partition(char *string_number[], int low, int high, int (*string_comparsion) (char *, char *))
 {
     char * pivot = string_number[high];
     int i = (low - 1);
@@ -312,18 +301,6 @@ int partition(char *string_number[], int low, int high)
 
 
 
-void reverse_quick_sort(char *string_number[], int low, int high) 
-{
-    if (low < high) 
-    {
-        int pi = reverse_partition(string_number, low, high);
-
-        quick_sort(string_number, low, pi - 1);
-        quick_sort(string_number, pi + 1, high);
-    }
-}
-
-
 int reverse_partition(char *string_number[], int low, int high)
 {
     char * pivot = string_number[high];
@@ -348,4 +325,36 @@ int reverse_partition(char *string_number[], int low, int high)
     string_number[high] = temp;  
 
     return (i + 1);
+}
+
+
+void sheker_sort(char **string_number, int count_of_string)
+{
+    int left = 0, right = count_of_string - 1;
+    bool flag = true;
+    
+    while ((left < right) and flag)
+    {
+        flag = false;
+        for (int i = left; i < right; i++)
+        {
+            if (string_comparsion(string_number[i], string_number[i + 1])) 
+            {
+                swap (string_number, i);
+                flag = true;
+            }
+        }
+        right--;
+        
+        for (int i = right; i > left; i--)
+        {
+            if (string_comparsion (string_number[i - 1], string_number[i]))
+            {
+                swap (string_number, i);
+                flag = true;
+            }
+        }
+        
+        left++;
+    }
 }

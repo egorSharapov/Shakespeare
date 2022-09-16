@@ -25,22 +25,22 @@ typedef struct
 } Text;
 
 void sort (char** string_number, int count_of_strings);
+void sheker_sort(char **string_number, int count_of_string, int (* string_comparsion) (char *, char*));
+
 void reverse_sort (char** string_number, Text * text);
 void reverse_strings (char ** string_number, int count_of_strings);
 void reverse_indexes (char ** string_number, Text * text);
 int string_comparsion(char * string1, char * string2);
-bool reverse_string_comparsion (char * string1, char * string2);
+int reverse_string_comparsion (char * string1, char * string2);
 bool not_letter (char symbol);
-void read_from_file (FILE * input_file, char ** string_number, Text * text);
+void place_pointers (char ** string_number, Text * text);
 void write_to_file (char ** string_number, const int count_of_strings, FILE * output_file);
-void count_symbols (FILE * input_file, Text * Text);
+void count_and_read (FILE * input_file, Text * Text);
 int check_extension (char *file_name, const char *extension);
 bool check_param (int argc, char *first_arg, char *second_arg);
 void swap(char **string, int j);
-//void copy_massive (char **temp_string_number, char **string_number);
-void quick_sort(char *string_number[], int low, int high);
-int partition(char *string_number[], int low, int high);
-void reverse_quick_sort(char *string_number[], int low, int high);
-int reverse_partition(char *string_number[], int low, int high);
+void quick_sort(char *string_number[], int low, int high, int (* string_comparsion) (char *, char*));
+int partition(char *string_number[], int low, int high, int (* string_comparsion) (char *, char*));
+
 
 #endif // FUNCTIONS_INCLUDED
