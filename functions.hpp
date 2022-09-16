@@ -17,6 +17,13 @@ enum ERRORS_CODE
     COUNT_EQ_ERROR  = 5, ///< error count of eqations in input file
 };
 
+enum DIRECTIONS
+{
+    LEFT = -1,
+    EQUAL = 0,
+    RIGHT = 1,
+};
+
 typedef struct
 {
     char *my_text        = NULL; //< count roots of the quadratic equation
@@ -24,12 +31,11 @@ typedef struct
     signed int count_of_strings = NAN; //< second root of the quadratic equation
 } Text;
 
-void sort (char** string_number, int count_of_strings);
+void sort (char** string_number, int count_of_strings, int (* string_comparsion) (char *, char*));
 void sheker_sort(char **string_number, int count_of_string, int (* string_comparsion) (char *, char*));
 
 void reverse_sort (char** string_number, Text * text);
-void reverse_strings (char ** string_number, int count_of_strings);
-void reverse_indexes (char ** string_number, Text * text);
+void reverse_strings (char ** string_number, Text * text, int direction);
 int string_comparsion(char * string1, char * string2);
 int reverse_string_comparsion (char * string1, char * string2);
 bool not_letter (char symbol);
@@ -41,6 +47,6 @@ bool check_param (int argc, char *first_arg, char *second_arg);
 void swap(char **string, int j);
 void quick_sort(char *string_number[], int low, int high, int (* string_comparsion) (char *, char*));
 int partition(char *string_number[], int low, int high, int (* string_comparsion) (char *, char*));
-
+char * my_strcpy (char *destination, const char *source);
 
 #endif // FUNCTIONS_INCLUDED

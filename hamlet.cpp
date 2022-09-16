@@ -28,19 +28,17 @@ int main (int argc, char *argv[])
     for (int i = 0; i < text.count_of_strings; i++)
         temp_string_number[i] = string_number[i];
     
-    sheker_sort (string_number, text.count_of_strings, string_comparsion);
-
+    //sheker_sort (string_number, text.count_of_strings, string_comparsion);
+    //sort (string_number, text.count_of_strings, string_comparsion);
     //qsort (string_number, text.count_of_strings, sizeof (char *), string_comparsion);
     
     quick_sort (string_number, 0, text.count_of_strings - 1, string_comparsion);
     write_to_file (string_number, text.count_of_strings, output_file);
     
-    //reverse_sort (string_number, &text);
-    //sheker_sort (string_number, text.count_of_strings, reverse_string_comparsion);
     
-    reverse_strings (string_number, text.count_of_strings);
+    reverse_strings (string_number, &text, RIGHT);
     quick_sort (string_number, 0, text.count_of_strings - 1, reverse_string_comparsion);
-    reverse_indexes (string_number, &text);
+    reverse_strings (string_number, &text, LEFT);
     
     write_to_file (string_number, text.count_of_strings, output_file);
 

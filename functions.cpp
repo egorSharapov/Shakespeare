@@ -71,7 +71,7 @@ void write_to_file (char ** string_number, int count_of_strings, FILE * output_f
 }
 
 
-void sort (char ** string_number, int count_of_strings)
+void sort (char ** string_number, int count_of_strings, int (* string_comparsion) (char *, char*))
 {
     assert (string_number    != NULL);
     assert (count_of_strings != 0);
@@ -91,6 +91,8 @@ void sort (char ** string_number, int count_of_strings)
 
 void swap(char **string_number, int j) 
 {
+    assert (string_number != NULL);
+
     char* temp = string_number[j];
                 
     string_number[j] = string_number[j + 1];
@@ -114,39 +116,16 @@ int string_comparsion (char * string1, char * string2)
             temp_string2++;
         
         if (*temp_string1 > *temp_string2)
-            return 1;
+            return RIGHT;
         else if (*temp_string1++ == *temp_string2++);
 
         else
-            return 0;
+            return EQUAL;
     }
-
     if (*temp_string2 == '\n')
-        return true;
+        return RIGHT;
     
-    return false;
-}
-
-
-void reverse_sort (char ** string_number, Text * text)
-{
-    assert (string_number != NULL);
-    assert (text != NULL);
-    assert (text->count_of_strings != 0);
-
-    reverse_strings (string_number, text->count_of_strings);
-    
-    for (int i = 0; i < text->count_of_strings; i++)
-    {
-        for (int j = 0; j < (text->count_of_strings - 1); j++)
-        {
-            if (reverse_string_comparsion (string_number[j], string_number[j + 1]))
-            {
-                swap (string_number, j);
-            }
-        }
-    }
-    reverse_indexes (string_number, text);
+    return EQUAL;
 }
 
 
@@ -167,47 +146,30 @@ int reverse_string_comparsion (char * string1, char * string2)
         
 
         if (*temp_string1 > *temp_string2)
-            return 1;
+            return RIGHT;
         else if (*temp_string1-- == *temp_string2--);
         else
-            return 0;
+            return EQUAL;
     }
     if (*temp_string2 == '\n')
-        return true;
+        return RIGHT;
     
-    return false;
+    return EQUAL;
 }
 
 
 
-void reverse_strings (char ** string_number, int count_of_strings)
-{
-    assert (string_number != NULL);
-    assert (count_of_strings != 0);
-
-    for (int i = 0; i < count_of_strings; i++)
-    {
-        while (*string_number[i] != '\n')
-            string_number[i]++;
-
-        string_number[i]--;
-    }
-}
-
-
-void reverse_indexes (char ** string_number, Text * text)
+void reverse_strings (char ** string_number, Text *text, int direction)
 {
     assert (string_number != NULL);
     assert (text->count_of_strings != 0);
-    assert (text != NULL);
 
     for (int i = 0; i < text->count_of_strings; i++)
     {
         while (*string_number[i] != '\n' and string_number[i] != text->my_text - 1)
-        {
-            string_number[i]--;
-        }
-        string_number[i]++;
+            string_number[i] += direction;
+
+        string_number[i] -= direction;
     }
 }
 
@@ -300,35 +262,7 @@ int partition(char *string_number[], int low, int high, int (*string_comparsion)
 }
 
 
-
-int reverse_partition(char *string_number[], int low, int high)
-{
-    char * pivot = string_number[high];
-    int i = (low - 1);
-
-    for (int j = low; j < high; j++) 
-    {
-        if (!reverse_string_comparsion (string_number[j], pivot)) 
-        {
-            i++;
-        
-            char* temp = string_number[j];
-                        
-            string_number[j] = string_number[i];
-            string_number[i] = temp;
-        }
-    }
-
-    char* temp = string_number[i + 1];
-                        
-    string_number[i + 1] = string_number[high];
-    string_number[high] = temp;  
-
-    return (i + 1);
-}
-
-
-void sheker_sort(char **string_number, int count_of_string)
+void sheker_sort(char **string_number, int count_of_string, int (* string_comparsion) (char *, char *))
 {
     int left = 0, right = count_of_string - 1;
     bool flag = true;
