@@ -6,19 +6,15 @@
 #include <math.h>
 #include <assert.h>
 #include <string.h>
-#include <sys\stat.h>
-#include <sys\types.h>
-#include <fcntl.h>
-#include <unistd.h>
 
 enum ERRORS_CODE 
 {
-    ERROR           = 2,
-    FALL            = -1,
+    ERROR           = -1,
+    FALL            = 0,
     SUCCESS         = 1, 
     INPUT_ERROR     = 3, ///< incorrect input error  
     OPEN_FILE_ERROR = 4, ///< error of open file
-    NO_MEM_ERR      = 5,
+    NO_MEM_ERROR  = 5, 
 };
 
 
@@ -32,37 +28,31 @@ enum DIRECTIONS
 
 typedef struct
 {
-    char *my_text               = NULL;
-    signed int count_of_symbols = 0;
-    signed int count_of_strings = 0;
+    char *my_text        = NULL;
+    int count_of_symbols = 0;
+    int count_of_strings = 0;
 } Text;
 
-
-typedef struct
+struct Strings
 {
-    char * string_number  = NULL;
-    unsigned string_len = 0;
-} Strings;
+    char * string_number = NULL;
+    int string_len = 0;
+};
 
-void sort (char** string_number, int count_of_strings, int (* string_comparsion) (char *, char*));
-void sheker_sort(char **string_number, int count_of_string, int (* string_comparsion) (char *, char*));
-void reverse_strings (char ** string_number, Text * text, int direction);
-int string_comparsion(char * string1, char * string2);
-int reverse_string_comparsion (char * string1, char * string2);
+void reverse_strings (Strings * strings, Text * text, int direction);
+int  string_comparsion (char * string1, char * string2);
+int  reverse_string_comparsion (char * string1, char * string2);
 bool not_letter (char symbol);
-void place_pointers (char ** string_number, Text * text);
-void write_to_file (char ** string_number, const int count_of_strings, FILE * output_file);
-int count_and_read (FILE * input_file, Text * Text);
-int check_extension (char *file_name, const char *extension);
+void place_pointers (Strings *strings, Text * text);
+void write_to_file (Strings * strings, const int count_of_strings, FILE * output_file);
+int  count_and_read (FILE * input_file, Text * Text);
+int  check_extension (char *file_name, const char *extension);
 bool check_param (int argc, char *first_arg, char *second_arg);
-void swap(char **string, int j);
-void quick_sort(char *string_number[], int low, int high, int (* string_comparsion) (char *, char*));
-int partition(char *string_number[], int low, int high, int (* string_comparsion) (char *, char *));
-void print_origin (FILE * output_file, Text * text);
-int q_string_comparsion (const void * string1, const void * string2);
-
-void t_place_pointers (Strings *strings, Text * text);
-void merge(char **string_number, int start, int midle, int stop);
-void mergeSort(char ** string_number, int left, int right);
-
+void swap           (char **string, int j);
+void quick_sort(Strings * strings, int low, int high, int (* string_comparsion) (char *, char *));
+int partition(Strings *strings, int low, int high, int (* string_comparsion) (char *, char *));
+void merge(Strings * strings, int start, int midle, int stop, int (*string_comparsion) (char *, char *));
+void merge_sort(Strings * strings, int left, int right, int (*string_comparsion) (char *, char *));
+int q_string_comparsion (const void * struct1, const void * struct2);
+void print_origin (Text *text, FILE * output_file);
 #endif // FUNCTIONS_INCLUDED

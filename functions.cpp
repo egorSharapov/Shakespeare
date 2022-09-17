@@ -1,71 +1,67 @@
 #include "functions.hpp"
 #include "log.h"
 
-void t_place_pointers (Strings *strings, Text * text)
+void place_pointers (Strings *strings, Text * text)
 {
+    assert (strings != NULL);
     assert (text != NULL);
-    assert (text->count_of_symbols != 0);
 
     int index_of_string = 1;
+
     int temp_index_of_symbol = 0;
-
     strings[0].string_number = text->my_text;
-
     for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
     {   
         if (text->my_text[index_of_symbol] == '\0')
         {
-            strings[index_of_symbol].string_len = index_of_symbol - temp_index_of_symbol;
+            strings[index_of_string].string_len = index_of_symbol - temp_index_of_symbol;
             strings[index_of_string].string_number = text->my_text + index_of_symbol + 1;
             temp_index_of_symbol = index_of_symbol;
             index_of_string++;
-        }  
+        }
     }
 
     text->my_text[text->count_of_symbols] = '\0';
 }
 
-void place_pointers (char ** string_number, Text * text)
-{
-    assert (string_number != NULL);
-    assert (text != NULL);
-    assert (text->count_of_symbols != 0);
+// void place_pointers (char ** string_number, Text * text)
+// {
+//     assert (string_number != NULL);
+//     assert (text != NULL);
+//     assert (text->count_of_symbols != 0);
 
-    int index_of_string = 1;
+//     int index_of_string = 1;
 
-    string_number[0] = text->my_text;
+//     string_number[0] = text->my_text;
 
-    for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
-    {   
-        if (text->my_text[index_of_symbol] == '\0')
-        {
-            string_number[index_of_string] = text->my_text + index_of_symbol + 1;
-            index_of_string++;
-        }  
-    }
+//     for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
+//     {   
+//         if (text->my_text[index_of_symbol] == '\0')
+//         {
+//             string_number[index_of_string] = text->my_text + index_of_symbol + 1;
+//             index_of_string++;
+//         }  
+//     }
 
-    text->my_text[text->count_of_symbols] = '\0';
-}
+//     text->my_text[text->count_of_symbols] = '\0';
+// }
+
 
 int count_and_read (FILE * input_file, Text * text)
 {
     assert (input_file != NULL);
     assert (text != NULL);
 
-    // struct stat buff;
-    // fstat (fileno(input_file), &buff);
-    // text->count_of_symbols = buff.st_size;                                 
-
     fseek(input_file, 0, SEEK_END);
-    text->count_of_symbols = ftell(input_file)/sizeof(char);                                 
+    text->count_of_symbols = ftell(input_file);                                 
 
     fseek (input_file, 0, SEEK_SET);
 
     text->my_text = (char *) calloc ((text->count_of_symbols), sizeof (char));
 
     if (text->my_text == NULL)
-        return NO_MEM_ERR;
-
+        return NO_MEM_ERROR;
+        
     text->count_of_symbols = fread(text->my_text, sizeof(char), text->count_of_symbols, input_file);
     
     for (int index_of_symbol = 0; index_of_symbol < text->count_of_symbols; index_of_symbol++)
@@ -73,25 +69,25 @@ int count_and_read (FILE * input_file, Text * text)
         if (text->my_text[index_of_symbol] == '\n')
         {
             text->my_text[index_of_symbol] = '\0';
-            text->count_of_strings++; 
+            text->count_of_strings++;
         }
     }
     text->count_of_strings++;
-    
     fclose (input_file);
-    
+
     return SUCCESS;
 }
 
-void write_to_file (char ** string_number, int count_of_strings, FILE * output_file)
+
+void write_to_file (Strings * strings, int count_of_strings, FILE * output_file)
 {
-    assert (string_number != NULL);
+    assert (strings != NULL);
     assert (count_of_strings != 0);
     assert (output_file != NULL);
 
-    for (int ind = 0; ind < count_of_strings; ind++)
+    for (int i = 0; i < count_of_strings; i++)
     {
-        char * temp = string_number[ind];
+        char * temp = strings[i].string_number;
         
         while (*temp != '\0')
         {
@@ -104,33 +100,6 @@ void write_to_file (char ** string_number, int count_of_strings, FILE * output_f
     putc('\n', output_file);
 }
 
-void print_origin (FILE * output_file, Text * text)
-{
-    for (int ind = 0; ind < text->count_of_symbols; ind++)
-    {
-        if (text->my_text[ind] == '\0')
-            putc ('\n', output_file);
-        else
-            putc (text->my_text[ind], output_file);
-    }
-}
-
-void sort (char ** string_number, int count_of_strings, int (* string_comparsion) (char *, char*))
-{
-    assert (string_number    != NULL);
-    assert (count_of_strings != 0);
-
-    for (int i = 0; i < count_of_strings; i++)
-    {
-        for (int j = 0; j < (count_of_strings - 1); j++)
-        {
-            if (string_comparsion (string_number[j], string_number[j + 1]))
-            {
-                swap(string_number, j);
-            }
-        }
-    }
-}
 
 
 void swap(char **string_number, int j) 
@@ -148,29 +117,31 @@ int string_comparsion (char * string1, char * string2)
 {
     assert (string1 != NULL);
     assert (string2 != NULL);
- 
-    char * temp_string1 = string1;
-    char * temp_string2 = string2;
+
+    char* temp_string1 = string1;
+    char* temp_string2 = string2;
 
     while (*temp_string1 != '\0' and *temp_string2 != '\0')
     {
-        while (not_letter (*temp_string1) and *temp_string1 != '\0') 
+
+        while (not_letter (*temp_string1) and *temp_string2 != '\0') 
             temp_string1++;
         while (not_letter (*temp_string2) and *temp_string2 != '\0')
             temp_string2++;
         
         if (*temp_string1 > *temp_string2)
             return RIGHT;
-        else if (*temp_string1++ == *temp_string2++);
-        else
+
+        if (*temp_string1 < *temp_string2)
             return LEFT;
-        
-        // temp_string1++;
-        // temp_string2++;
+
+        temp_string1++;
+        temp_string2++;   
     }
+
     if (*temp_string2 == '\0')
         return RIGHT;
-    
+
     return EQUAL;
 }
 
@@ -190,14 +161,12 @@ int reverse_string_comparsion (char * string1, char * string2)
         while (not_letter (*temp_string2) and *temp_string2 != '\0')
             temp_string2--;
         
+
         if (*temp_string1 > *temp_string2)
             return RIGHT;
-
-        if (*temp_string1 < *temp_string2)
-            return LEFT;
-        
-        temp_string1--;
-        temp_string2--;
+        else if (*temp_string1-- == *temp_string2--);
+        else
+            return EQUAL;
     }
     if (*temp_string2 == '\0')
         return RIGHT;
@@ -207,18 +176,14 @@ int reverse_string_comparsion (char * string1, char * string2)
 
 
 
-void reverse_strings (char ** string_number, Text *text, int direction)
+void reverse_strings (Strings * strings, Text *text, int direction)
 {
-    assert (string_number != NULL);
+    assert (strings != NULL);
+    assert (text != NULL);
     assert (text->count_of_strings != 0);
 
     for (int i = 0; i < text->count_of_strings; i++)
-    {
-        while (*string_number[i] != '\0' and string_number[i] != text->my_text - 1)
-            string_number[i] += direction;
-
-        string_number[i] -= direction;
-    }
+        strings[i].string_number += direction*strings[i].string_len;
 }
 
 
@@ -271,118 +236,118 @@ int check_extension (char *file_name, const char *extension)
 }
 
 
-void quick_sort(char *string_number[], int low, int high, int (* string_comparsion) (char *, char *)) 
+void quick_sort(Strings *strings, int low, int high, int (* string_comparsion) (char *, char *)) 
 {
     if (low < high) 
     {
-        int pi = partition(string_number, low, high, string_comparsion);
+        int pi = partition(strings, low, high, string_comparsion);
 
-        quick_sort(string_number, low, pi - 1, string_comparsion);
-        quick_sort(string_number, pi + 1, high, string_comparsion);
+        quick_sort(strings, low, pi - 1, string_comparsion);
+        quick_sort(strings, pi + 1, high, string_comparsion);
     }
 }
 
 
-int partition(char *string_number[], int low, int high, int (*string_comparsion) (char  *, char *))
+int partition(Strings * strings, int low, int high, int (*string_comparsion) (char *, char *))
 {
-    char * pivot = string_number[high];
+    char * pivot = strings[high].string_number;
     int i = (low - 1);
-
     for (int j = low; j < high; j++) 
     {
-        if (!string_comparsion (string_number[j], pivot)) 
+        if (string_comparsion (strings[j].string_number, pivot) != RIGHT) 
         {
             i++;
         
-            char* temp = string_number[j];
+            char* temp = strings[j].string_number;
                         
-            string_number[j] = string_number[i];
-            string_number[i] = temp;
+            strings[j].string_number = strings[i].string_number;
+            strings[i].string_number = temp;
         }
     }
 
-    char* temp = string_number[i + 1];
+    char* temp = strings[i + 1].string_number;
                         
-    string_number[i + 1] = string_number[high];
-    string_number[high] = temp;  
+    strings[i + 1].string_number = strings[high].string_number;
+    strings[high].string_number = temp;  
 
     return (i + 1);
 }
 
 
-void merge(char **string_number, int start, int midle, int stop)    
+void merge(Strings * strings, int start, int middle, int stop, int (*string_comparsion) (char *, char *))    
 {    
     int i, j, k;  
-    int n1 = midle - start + 1;    
-    int n2 = stop - midle;    
+    int first_n = middle - start + 1;    
+    int second_n = stop - middle;    
       
-    char * LeftArray[n1];
-    char * RightArray[n2];
+    char * left_array[first_n];
+    char * right_array[second_n];
   
-    for (int index = 0; index < n1; index++)    
-        LeftArray[index] = string_number[start + index];    
+    for (i = 0; i < first_n; i++)    
+        left_array[i] = strings[start + i].string_number;    
     
-    for (int index = 0; index < n2; index++)    
-        RightArray[index] = string_number[midle + 1 + index];    
-      
+    for (j = 0; j < second_n; j++)    
+        right_array[j] = strings[middle + 1 + j].string_number;    
+
     i = 0;
     j = 0;
     k = start;
       
-    while (i < n1 and j < n2)    
+    while (i < first_n and j < second_n)    
     {    
-        if (string_comparsion(RightArray[j], LeftArray[i])) 
+        if ((string_comparsion(left_array[i], right_array[j])) != RIGHT) 
         {    
-            string_number[k] = LeftArray[i];    
-            i++;    
+            strings[k].string_number = left_array[i];    
+            i++;  
         }    
         else    
         {    
-            string_number[k] = RightArray[j];    
+            strings[k].string_number = right_array[j];    
             j++;    
         }    
         k++;    
     }    
-    while (i < n1)    
+    while (i < first_n)    
     {    
-        string_number[k] = LeftArray[i];    
+        strings[k].string_number = left_array[i];    
         i++;    
         k++;    
     }    
       
-    while (j < n2)    
+    while (j < second_n)    
     {    
-        string_number[k] = RightArray[j];    
+        strings[k].string_number = right_array[j];    
         j++;    
         k++;    
     }    
 }    
 
-
-void mergeSort(char ** string_number, int left, int right)
+void merge_sort(Strings * strings, int left, int right, int (*string_comparsion) (char *, char *))
 {
     if (left < right) 
     {
         int middle = left + (right - left) / 2;
   
-        mergeSort(string_number, left, middle);
-        mergeSort(string_number, middle + 1, right);
+        merge_sort(strings, left, middle, string_comparsion);
+        merge_sort(strings, middle + 1, right, string_comparsion);
   
-        merge(string_number, left, middle, right);
+        merge(strings, left, middle, right, string_comparsion);
     }
 }
 
-int q_string_comparsion (const void * string1, const void * string2)
-{
-    assert (string1 != NULL);
-    assert (string2 != NULL);
 
-    const char * temp_string1 = *((const char **) string1);
-    const char * temp_string2 = *((const char **) string2);
+int q_string_comparsion (const void * struct1, const void * struct2)
+{
+    assert (struct1 != NULL);
+    assert (struct2 != NULL);
+
+    const char* temp_string1 = ((const Strings *) struct1)->string_number;
+    const char* temp_string2 = ((const Strings *) struct2)->string_number;
 
     while (*temp_string1 != '\0' and *temp_string2 != '\0')
     {
-        while (not_letter (*temp_string1) and *temp_string1 != '\0') 
+
+        while (not_letter (*temp_string1) and *temp_string2 != '\0') 
             temp_string1++;
         while (not_letter (*temp_string2) and *temp_string2 != '\0')
             temp_string2++;
@@ -392,12 +357,32 @@ int q_string_comparsion (const void * string1, const void * string2)
 
         if (*temp_string1 < *temp_string2)
             return LEFT;
-        
+
         temp_string1++;
-        temp_string2++;
+        temp_string2++;   
     }
+
     if (*temp_string2 == '\0')
         return RIGHT;
-    
+
     return EQUAL;
+}
+
+
+void print_origin (Text * text, FILE * output_file)
+{
+    assert (text != NULL);
+    assert (output_file != NULL);
+
+    for (int i = 0; i < text->count_of_symbols; i++)
+    {       
+        if (text->my_text[i] != '\0')
+        {
+            putc(text->my_text[i], output_file);
+        }
+        else
+            putc('\n', output_file);
+    }
+    
+    putc('\n', output_file);
 }
