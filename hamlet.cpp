@@ -8,9 +8,9 @@ int main (int argc, char *argv[])
 {
     FILE *input_file = NULL;
     FILE *output_file = NULL;
-    
+
     Text text = {};
-    
+
     if (!check_param (argc, argv[1], argv[2])) 
         return INPUT_ERROR;
 
@@ -18,32 +18,36 @@ int main (int argc, char *argv[])
         return FALL;
 
 
-    count_and_read (input_file, &text);
+    if (count_and_read (input_file, &text) == NO_MEM_ERR)
+        return FALL;
     
+    //Strings strings[text.count_of_strings];
+    //Strings *strings = (Strings *) calloc (text.count_of_strings, sizeof(Strings));
+
+
     char *string_number[text.count_of_strings];
-    char *temp_string_number[text.count_of_strings];
 
     place_pointers (string_number, &text);
 
-    for (int i = 0; i < text.count_of_strings; i++)
-        temp_string_number[i] = string_number[i];
-    
-    //sheker_sort (string_number, text.count_of_strings, string_comparsion);
-    //sort (string_number, text.count_of_strings, string_comparsion);
-    //qsort (string_number, text.count_of_strings, sizeof (char *), string_comparsion);
-    
-    quick_sort (string_number, 0, text.count_of_strings - 1, string_comparsion);
+    //t_place_pointers (strings, &text);
+
+    sort (string_number, text.count_of_strings, string_comparsion);
+    //qsort (string_number, text.count_of_strings, sizeof (char *), q_string_comparsion);
+    //quick_sort (string_number, 0, text.count_of_strings - 1, string_comparsion);
+    //mergeSort (string_number, 0, text.count_of_strings);
     write_to_file (string_number, text.count_of_strings, output_file);
     
     
     reverse_strings (string_number, &text, RIGHT);
-    quick_sort (string_number, 0, text.count_of_strings - 1, reverse_string_comparsion);
+    //quick_sort (string_number, 0, text.count_of_strings - 1, reverse_string_comparsion);
     reverse_strings (string_number, &text, LEFT);
     
     write_to_file (string_number, text.count_of_strings, output_file);
 
-    write_to_file (temp_string_number, text.count_of_strings, output_file);
+    print_origin (output_file, &text);
+
     fclose(output_file);
+
 
     free(text.my_text);
    
