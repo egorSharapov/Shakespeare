@@ -1,6 +1,7 @@
 #include "functions.hpp"
 #include "log.h"
 
+
 int main (int argc, char *argv[])
 {
 
@@ -21,21 +22,22 @@ int main (int argc, char *argv[])
 
     place_pointers (strings, &text);
 
-    qsort (strings, text.count_of_strings, sizeof (Strings *), q_string_comparsion);
-    merge_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
-    //quick_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
+    //qsort (strings, text.count_of_strings, sizeof (Strings), q_string_comparsion);
+    //merge_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
+    quick_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
     write_to_file (strings, text.count_of_strings, output_file);
     
-    
     reverse_strings (strings, &text, RIGHT);
-    quick_sort (strings, 0, text.count_of_strings - 1, reverse_string_comparsion);
+    merge_sort (strings, 0, text.count_of_strings - 1, reverse_string_comparsion);
     reverse_strings (strings, &text, LEFT);
 
-    print_origin (&text, output_file);
-    fclose(output_file);
+    write_to_file (strings, text.count_of_strings, output_file);
 
-    free(text.my_text);
-   
+    print_origin (&text, output_file);
+    fclose (output_file);
+
+    free (text.my_text);
+    free (strings);
     printf ("\nstrings: %d \nsymbols: %d",text.count_of_strings, text.count_of_symbols);
     
     return 0;

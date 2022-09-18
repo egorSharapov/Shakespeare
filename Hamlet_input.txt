@@ -4489,8 +4489,8 @@ O, a pit of clay for to be made
 For such a guest is meet.
 Throws up another skull
 HAMLET
-There's another: why may not that be the skull of a
-lawyer? Where be his quiddities now, his quillets,
+There's another: why may not that be the skull of alawyer?
+Where be his quiddities now, his quillets,
 his cases, his tenures, and his tricks? why does he
 suffer this rude knave now to knock him about the
 sconce with a dirty shovel, and will not tell him of
@@ -4501,9 +4501,9 @@ his recoveries: is this the fine of his fines, and
 the recovery of his recoveries, to have his fine
 pate full of fine dirt? will his vouchers vouch him
 no more of his purchases, and double ones too, than
-the length and breadth of a pair of indentures? The
-very conveyances of his lands will hardly lie in
-this box; and must the inheritor himself have no more, ha?
+the length and breadth of a pair of indentures? 
+The very conveyances of his lands will hardly lie in this box; 
+and must the inheritor himself have no more, ha?
 HORATIO
 Not a jot more, my lord.
 HAMLET
@@ -4520,16 +4520,15 @@ Sings
 O, a pit of clay for to be made
 For such a guest is meet.
 HAMLET
-I think it be thine, indeed; for thou liest in't.
+I think it be thine, indeed; for thou liest isn't.
 First Clown
-You lie out on't, sir, and therefore it is not
-yours: for my part, I do not lie in't, and yet it is mine.
+You lie out on't, sir, and therefore it is not yours: 
+for my part, I do not lie in't, and yet it is mine.
 HAMLET
 'Thou dost lie in't, to be in't and say it is thine:
 'tis for the dead, not for the quick; therefore thou liest.
 First Clown
-'Tis a quick lie, sir; 'twill away gain, from me to
-you.
+'Tis a quick lie, sir; 'twill away gain, from me to you.
 HAMLET
 What man dost thou dig it for?
 First Clown
@@ -5380,6 +5379,3 @@ To have proved most royally: and, for his passage,
 The soldiers' music and the rites of war
 Speak loudly for him.
 Take up the bodies: such a sight as this
-Becomes the field, but here shows much amiss.
-Go, bid the soldiers shoot.
-A dead march. Exeunt, bearing off the dead bodies; after which a peal of ordnance is shot off
