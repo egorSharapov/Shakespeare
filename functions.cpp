@@ -25,7 +25,7 @@ void place_pointers (Strings *strings, Text * text)
 }
 
 
-int count_and_read (FILE * input_file, Text * text)
+ERRORS_CODE count_and_read (FILE *input_file, Text * text)
 {
     assert (input_file != NULL);
     assert (text != NULL);
@@ -203,40 +203,40 @@ int check_extension (char *file_name, const char *extension)
 }
 
 
+void my_quick_sort (void * obj, size_t count_of_obj, size_t size_of_obj, int (*comparsion) (const void *, const void *))
+{
+    char * points = (char *) obj;
+    quick_sort (points, 0, count_of_obj - 1, size_of_obj, comparsion);
+}
 
-void quick_sort (Strings *strings, int low, int high, int (* string_comparsion) (const void *, const void *)) 
+
+void quick_sort (char *strings, int low, int high, size_t size, int (* comparsion) (const void *, const void *)) 
 {
     if (low < high) 
     {
-        int pi = partition(strings, low, high, string_comparsion);
+        int pi = partition(strings, low, high, size, comparsion);
 
-        quick_sort(strings, low, pi - 1, string_comparsion);
-        quick_sort(strings, pi + 1, high, string_comparsion);
+        quick_sort(strings, low, pi - 1, size, comparsion);
+        quick_sort(strings, pi + 1, high, size, comparsion);
     }
 }
 
 
-int partition (Strings * strings, int low, int high, int (*string_comparsion) (const void *, const void *))
+int partition (char * strings, int low, int high, size_t size, int (*comparsion) (const void *, const void *))
 {
-    char * pivot = strings[high].string_number;
+    char * pivot = (strings + high*size);
     int i = (low - 1);
     for (int j = low; j < high; j++) 
     {
-        if (string_comparsion (strings[j].string_number, pivot) != RIGHT) 
+        if (comparsion ((strings + j*size), pivot) != RIGHT) 
         {
             i++;
-        
-            Strings temp = strings[j];
-                        
-            strings[j] = strings[i];
-            strings[i] = temp;
+
+            swap (strings + j*size, strings + i*size, size);
         }
     }
 
-    Strings temp = strings[i + 1];
-                        
-    strings[i + 1] = strings[high];
-    strings[high] = temp;  
+    swap (strings + (i + 1)*size, strings + high*size, size);
 
     return (i + 1);
 }
@@ -290,6 +290,7 @@ static void merge (Strings * strings, int start, int middle, int stop, int (*str
     }    
 }    
 
+
 void merge_sort (Strings * strings, int left, int right, int (*string_comparsion) (const void *, const void *))
 {
     if (left < right) 
@@ -304,7 +305,7 @@ void merge_sort (Strings * strings, int left, int right, int (*string_comparsion
 }
 
 
-int q_string_comparsion (const void * struct1, const void * struct2)
+int struct_comparsion (const void * struct1, const void * struct2)
 {
     assert (struct1 != NULL);
     assert (struct2 != NULL);
@@ -347,4 +348,15 @@ void print_origin (Text * text, FILE * output_file)
     for (int i = 0; i < text->count_of_strings; i++)
         point += fprintf (output_file, "%s\n", point);
 
+}
+
+
+void swap(char* obj1, char* obj2, size_t width)
+{
+    while (width--)
+    {
+        char const temp = *obj1;
+        *obj1++ = *obj2;
+        *obj2++ = temp;
+    }
 }

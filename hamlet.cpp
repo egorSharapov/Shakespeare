@@ -22,9 +22,9 @@ int main (int argc, char *argv[])
 
     place_pointers (strings, &text);
 
-    //qsort (strings, text.count_of_strings, sizeof (Strings), q_string_comparsion);
+    //q_sort (strings, text.count_of_strings, sizeof (Strings), q_string_comparsion);
+    my_quick_sort (strings, text.count_of_strings, sizeof (Strings), struct_comparsion);
     //merge_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
-    quick_sort (strings, 0, text.count_of_strings - 1, string_comparsion);
     write_to_file (strings, text.count_of_strings, output_file);
     
     reverse_strings (strings, &text, RIGHT);
@@ -38,6 +38,7 @@ int main (int argc, char *argv[])
 
     free (text.my_text);
     free (strings);
+    
     printf ("\nstrings: %d \nsymbols: %d",text.count_of_strings, text.count_of_symbols);
     
     return 0;

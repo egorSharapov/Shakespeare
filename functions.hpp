@@ -45,12 +45,14 @@ int  reverse_string_comparsion (const void * string1, const void * string2);
 bool not_letter                (char symbol);
 void place_pointers            (Strings * strings, Text * text);
 void write_to_file             (Strings * strings, const int count_of_strings, FILE * output_file);
-int  count_and_read            (FILE * input_file, Text * Text);
 int  check_extension           (char * file_name, const char * extension);
 bool check_param               (int argc, char *first_arg, char * second_arg);
-void quick_sort                (Strings * strings, int low,  int high,  int (*string_comparsion) (const void *, const void *));
-int partition (Strings * strings, int low, int high, int (*string_comparsion) (const void *, const void *));
+void my_quick_sort             (void * obj, size_t count_of_obj, size_t size_of_obj, int (*comparsion) (const void *, const void *));
+void quick_sort                (char * strings, int low,  int high,  size_t size, int (*string_comparsion) (const void *, const void *));
+int partition                  (char * strings, int low, int high, size_t size, int (*string_comparsion) (const void *, const void *));
 void merge_sort                (Strings * strings, int left, int right, int (*string_comparsion) (const void *, const void *));
-int  q_string_comparsion       (const void * struct1, const void * struct2);
+int  struct_comparsion         (const void * struct1, const void * struct2);
 void print_origin              (Text * text, FILE * output_file);
+ERRORS_CODE  count_and_read    (FILE * input_file, Text * Text);
+void swap(char* a, char* b, size_t width);
 #endif // FUNCTIONS_INCLUDED
